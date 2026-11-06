@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dicionário de Dados — Catálogos Hiroshima</title>
+<style>
+  :root { --cor: #1f3b5c; --borda: #c9d3df; --fundo: #f5f7fa; --texto: #1d1d1f; --destaque: #eef3f9; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--texto); background: #fff; line-height: 1.45; }
+  header { background: var(--cor); color: #fff; padding: 24px 32px; }
+  header h1 { margin: 0 0 6px 0; font-size: 22px; }
+  header p { margin: 0; font-size: 14px; opacity: 0.9; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px 20px; }
+  nav { background: var(--fundo); border: 1px solid var(--borda); padding: 14px 18px; border-radius: 6px; margin-bottom: 24px; }
+  nav h2 { margin: 0 0 8px 0; font-size: 15px; }
+  nav ul { margin: 0; padding-left: 18px; columns: 2; font-size: 14px; }
+  nav a { color: var(--cor); text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  h2 { color: var(--cor); font-size: 20px; border-bottom: 2px solid var(--cor); padding-bottom: 4px; margin-top: 36px; }
+  h3 { color: var(--cor); font-size: 16px; margin: 22px 0 6px 0; }
+  p.nota { font-size: 13px; color: #444; margin: 4px 0 10px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 14px; }
+  th, td { border: 1px solid var(--borda); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--destaque); color: var(--cor); }
+  td.codigo, td.tipo { font-family: Consolas, "Courier New", monospace; white-space: nowrap; }
+  .sim { text-align: center; font-weight: bold; }
+  .legenda { font-size: 13px; background: var(--fundo); border: 1px solid var(--borda); padding: 12px 16px; border-radius: 6px; }
+  .legenda ul { margin: 6px 0 0 0; padding-left: 18px; }
+  .alerta { background: #fff7e6; border: 1px solid #f0c36d; padding: 10px 14px; border-radius: 6px; font-size: 13px; margin: 12px 0; }
+  @media (max-width: 700px) { nav ul { columns: 1; } table { font-size: 12px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dicionário de Dados — Catálogos Hiroshima</h1>
+  <p>Modelo físico (MySQL 8.0) · Base: DER conceitual v14 e modelo lógico · Banco: <code>hiroshima</code></p>
+</header>
+
+<main>
+
+<nav>
+  <h2>Tabelas</h2>
+  <ul>
+    <li><a href="#cliente">CLIENTE</a></li>
+    <li><a href="#representante">REPRESENTANTE_COMERCIAL</a></li>
+    <li><a href="#pedido">PEDIDO</a></li>
+    <li><a href="#contem">CONTEM</a></li>
+    <li><a href="#produto">PRODUTO</a></li>
+    <li><a href="#origina">ORIGINA</a></li>
+    <li><a href="#contas">CONTAS_PAGAR</a></li>
+    <li><a href="#fornecedor">FORNECEDOR</a></li>
+    <li><a href="#faturamento">FATURAMENTO</a></li>
+    <li><a href="#nota">NOTA_FISCAL</a></li>
+    <li><a href="#expedicao">EXPEDICAO</a></li>
+    <li><a href="#transportadora">TRANSPORTADORA</a></li>
+    <li><a href="#entrega">ENTREGA</a></li>
+    <li><a href="#regras">Regras de negócio e cardinalidade</a></li>
+    <li><a href="#premissas">Premissas do grupo</a></li>
+    <li><a href="#convencoes">Convenções</a></li>
+  </ul>
+</nav>
+
+<section class="legenda" id="convencoes">
+  <strong>Convenções</strong>
+  <ul>
+    <li><strong>PK</strong>: chave primária. <strong>FK</strong>: chave estrangeira. <strong>AI</strong>: AUTO_INCREMENT.</li>
+    <li><strong>Obrigatório</strong>: NOT NULL. <strong>Único</strong>: UNIQUE.</li>
+    <li><strong>Padrão</strong>: valor atribuído quando o campo não é informado. "—" significa que não há valor padrão.</li>
+    <li><strong>Valores permitidos / regra</strong>: regras CHECK do banco, regras de negócio (código RBxx, quando houver) ou listas de valores definidas pelo grupo (premissas, ver seção final). Regras marcadas como "regra de aplicação" não são impostas pelo banco e devem ser controladas pelo sistema.</li>
+    <li>Valores monetários usam DECIMAL(10,2). Chaves e datas seguem os tipos indicados.</li>
+    <li>Nomes em minúsculas, sem acento e sem espaço. Exceções: CNPJ, CEP e UF, que estão em maiúsculas por decisão do grupo.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<h2 id="cliente">CLIENTE</h2>
+<p class="nota">Distribuidores que compram da empresa. Entidade do DER: CLIENTE (1,1) faz REALIZA com PEDIDO (0,n).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_cliente</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do cliente.</td></tr>
+    <tr><td class="codigo">razao_social</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre, conforme o cadastro do distribuidor.</td><td>Razão social do distribuidor.</td></tr>
+    <tr><td class="codigo">CNPJ</td><td class="tipo">CHAR(14)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Somente dígitos (14), sem máscara.</td><td>Cadastro Nacional da Pessoa Jurídica.</td></tr>
+    <tr><td class="codigo">nome_fantasia</td><td class="tipo">VARCHAR(60)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Nome fantasia do cliente.</td></tr>
+    <tr><td class="codigo">email</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Formato de e-mail. Dado pessoal (RB15).</td><td>E-mail de contato.</td></tr>
+    <tr><td class="codigo">telefone</td><td class="tipo">VARCHAR(15)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Somente dígitos (DDD e número), sem máscara. Dado pessoal (RB15).</td><td>Telefone de contato.</td></tr>
+    <tr><td class="codigo">logradouro</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Logradouro do endereço do cliente.</td></tr>
+    <tr><td class="codigo">numero</td><td class="tipo">VARCHAR(10)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto, para aceitar valores como "S/N".</td><td>Número do endereço.</td></tr>
+    <tr><td class="codigo">complemento</td><td class="tipo">VARCHAR(50)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Complemento do endereço.</td></tr>
+    <tr><td class="codigo">bairro</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Bairro do endereço.</td></tr>
+    <tr><td class="codigo">cidade</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Cidade do endereço.</td></tr>
+    <tr><td class="codigo">UF</td><td class="tipo">CHAR(2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Sigla de duas letras da unidade federativa (ex.: SP).</td><td>Unidade federativa.</td></tr>
+    <tr><td class="codigo">CEP</td><td class="tipo">CHAR(8)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Somente dígitos (8), sem hífen.</td><td>Código de Endereçamento Postal.</td></tr>
+    <tr><td class="codigo">status</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. ATIVO ou INATIVO (premissa do grupo).</td><td>Situação cadastral.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="representante">REPRESENTANTE_COMERCIAL</h2>
+<p class="nota">Representantes comerciais que atendem os pedidos. Relacionamento ATENDE com PEDIDO: representante (0,n), pedido (0,1).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_representante</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do representante.</td></tr>
+    <tr><td class="codigo">nome</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre. Dado pessoal (RB15).</td><td>Nome do representante.</td></tr>
+    <tr><td class="codigo">email</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Formato de e-mail. Dado pessoal (RB15).</td><td>E-mail de contato.</td></tr>
+    <tr><td class="codigo">telefone</td><td class="tipo">VARCHAR(15)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Somente dígitos. Dado pessoal (RB15).</td><td>Telefone de contato.</td></tr>
+    <tr><td class="codigo">status_representante</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. ATIVO ou INATIVO (premissa do grupo).</td><td>Situação cadastral.</td></tr>
+    <tr><td class="codigo">data_cadastro</td><td class="tipo">DATE</td><td class="sim">Sim</td><td>Não</td><td>CURRENT_DATE</td><td>Obrigatória. Se não informada, recebe a data atual.</td><td>Data do cadastro.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="pedido">PEDIDO</h2>
+<p class="nota">Pedidos feitos pelos clientes. Recebe as chaves de CLIENTE e de REPRESENTANTE_COMERCIAL. O período de atendimento do representante (data_hora_inicio e data_hora_fim) vem do relacionamento ATENDE.</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_pedido</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do pedido.</td></tr>
+    <tr><td class="codigo">id_cliente</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Deve existir em CLIENTE. Todo pedido pertence a um cliente (REALIZA).</td><td>Cliente que fez o pedido (REALIZA, 1:N).</td></tr>
+    <tr><td class="codigo">id_representante</td><td class="tipo">INT (FK)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Quando informado, deve existir em REPRESENTANTE_COMERCIAL. Pedido sem representante é válido (ATENDE, 0,1).</td><td>Representante que atendeu o pedido (ATENDE, 0,1).</td></tr>
+    <tr><td class="codigo">data_hora_pedido</td><td class="tipo">DATETIME</td><td class="sim">Sim</td><td>Não</td><td>CURRENT_TIMESTAMP</td><td>Obrigatória. Se não informada, recebe a data e hora do registro. Registro feito pelo setor Comercial (RB02).</td><td>Data e hora do registro do pedido.</td></tr>
+    <tr><td class="codigo">data_hora_liberacao</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>CHECK: não pode ser anterior a data_hora_pedido. Preenchida quando o pedido é liberado (RB02).</td><td>Data e hora em que o pedido foi liberado para as etapas seguintes.</td></tr>
+    <tr><td class="codigo">tipo_pedido</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. VENDA, TROCA ou BONIFICACAO (premissa do grupo).</td><td>Modalidade do pedido.</td></tr>
+    <tr><td class="codigo">status_pedido</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. LIBERADO, EXPEDIDO, ENTREGUE ou CANCELADO (premissa do grupo).</td><td>Situação atual do pedido.</td></tr>
+    <tr><td class="codigo">observacao</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Informações adicionais.</td></tr>
+    <tr><td class="codigo">condicao_pagamento</td><td class="tipo">VARCHAR(30)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. A_VISTA ou A_PRAZO (premissa do grupo). A cobrança é feita fora do sistema.</td><td>Condição de pagamento acordada.</td></tr>
+    <tr><td class="codigo">data_hora_cancelamento</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Preenchido apenas quando o pedido é cancelado (RB07). Regra de aplicação.</td><td>Data e hora do cancelamento.</td></tr>
+    <tr><td class="codigo">motivo_cancelamento</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Preenchido apenas quando o pedido é cancelado (RB07). Texto livre. Regra de aplicação.</td><td>Motivo do cancelamento.</td></tr>
+    <tr><td class="codigo">data_hora_inicio</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Início do atendimento do representante ao pedido. Só se aplica quando id_representante está informado (regra de aplicação).</td><td>Início do atendimento do representante ao pedido (ATENDE).</td></tr>
+    <tr><td class="codigo">data_hora_fim</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>CHECK: não pode ser anterior a data_hora_inicio. Opcional; só se aplica quando há representante.</td><td>Fim do atendimento do representante ao pedido (ATENDE).</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="contem">CONTEM</h2>
+<p class="nota">Tabela associativa entre PEDIDO e PRODUTO (N:N). Os atributos quantidade, preço praticado e desconto pertencem ao par pedido–produto. Cada pedido tem pelo menos um produto (RB08).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_pedido</td><td class="tipo">INT (PK, FK)</td><td class="sim">Sim</td><td>Chave composta</td><td>—</td><td>Deve existir em PEDIDO. Parte da chave primária composta. Todo pedido tem ao menos um item (RB08).</td><td>Pedido do item.</td></tr>
+    <tr><td class="codigo">id_produto</td><td class="tipo">INT (PK, FK)</td><td class="sim">Sim</td><td>Chave composta</td><td>—</td><td>Deve existir em PRODUTO. Parte da chave primária composta. O produto precisa estar cadastrado antes de entrar no pedido.</td><td>Produto do item.</td></tr>
+    <tr><td class="codigo">quantidade</td><td class="tipo">INT</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior que zero (RB16).</td><td>Quantidade do produto no pedido.</td></tr>
+    <tr><td class="codigo">preco_praticado</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior ou igual a zero (RB16). Preço cobrado naquele pedido, que pode diferir do preço de tabela.</td><td>Preço cobrado por unidade naquele pedido.</td></tr>
+    <tr><td class="codigo">desconto</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>0</td><td>CHECK: maior ou igual a zero (RB16). Valor monetário, não percentual.</td><td>Valor de desconto concedido no item.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="produto">PRODUTO</h2>
+<p class="nota">Produtos comercializados pela empresa. Relaciona-se com PEDIDO (via CONTEM) e com CONTAS_PAGAR (via ORIGINA). Cada produto tem pelo menos uma compra registrada (RB09).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_produto</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do produto.</td></tr>
+    <tr><td class="codigo">nome_produto</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Nome do produto.</td></tr>
+    <tr><td class="codigo">codigo_barras</td><td class="tipo">VARCHAR(14)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Somente dígitos (até 14), para preservar zeros à esquerda.</td><td>Código de barras do produto.</td></tr>
+    <tr><td class="codigo">sku</td><td class="tipo">VARCHAR(30)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Código interno do produto.</td><td>Código interno do produto.</td></tr>
+    <tr><td class="codigo">ncm</td><td class="tipo">CHAR(8)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Somente dígitos (8), conforme a Nomenclatura Comum do Mercosul.</td><td>Nomenclatura Comum do Mercosul.</td></tr>
+    <tr><td class="codigo">categoria</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. MODA_FEMININA, UTENSILIOS ou CASA (premissa do grupo).</td><td>Categoria do produto.</td></tr>
+    <tr><td class="codigo">unidade_medida</td><td class="tipo">VARCHAR(5)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. UN, CX ou KG (premissa do grupo).</td><td>Unidade de medida.</td></tr>
+    <tr><td class="codigo">preco_unitario</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior ou igual a zero (RB16). Preço de tabela; o preço cobrado fica em CONTEM.</td><td>Preço de tabela do produto.</td></tr>
+    <tr><td class="codigo">status_produto</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. ATIVO ou INATIVO (premissa do grupo).</td><td>Situação cadastral.</td></tr>
+    <tr><td class="codigo">data_hora_ultima_entrada</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Nulo se o produto nunca entrou. O controle de quantidade em estoque fica fora do banco.</td><td>Data e hora da última entrada no estoque.</td></tr>
+    <tr><td class="codigo">data_hora_ultima_saida</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Nulo se o produto nunca saiu.</td><td>Data e hora da última saída do produto.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="origina">ORIGINA</h2>
+<p class="nota">Tabela associativa entre CONTAS_PAGAR e PRODUTO (N:N). Registra a origem de compra de cada produto. Cada conta tem pelo menos um produto (RB10), e cada produto tem pelo menos uma compra (RB09).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_produto</td><td class="tipo">INT (PK, FK)</td><td class="sim">Sim</td><td>Chave composta</td><td>—</td><td>Deve existir em PRODUTO. Parte da chave primária composta (RB09).</td><td>Produto comprado.</td></tr>
+    <tr><td class="codigo">id_conta_pagar</td><td class="tipo">INT (PK, FK)</td><td class="sim">Sim</td><td>Chave composta</td><td>—</td><td>Deve existir em CONTAS_PAGAR. Parte da chave primária composta (RB10).</td><td>Conta a pagar que originou a compra.</td></tr>
+    <tr><td class="codigo">quantidade_comprada</td><td class="tipo">INT</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior que zero (RB16).</td><td>Quantidade do produto adquirida nessa compra.</td></tr>
+    <tr><td class="codigo">valor_unitario_compra</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior ou igual a zero (RB16).</td><td>Custo unitário do produto nessa compra.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="contas">CONTAS_PAGAR</h2>
+<p class="nota">Obrigações financeiras com fornecedores. Relacionamento PAGA com FORNECEDOR (cada conta tem um fornecedor, RB13) e ORIGINA com PRODUTO (RB10).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_conta_pagar</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador da conta.</td></tr>
+    <tr><td class="codigo">id_fornecedor</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Deve existir em FORNECEDOR (RB13).</td><td>Fornecedor credor.</td></tr>
+    <tr><td class="codigo">descricao</td><td class="tipo">VARCHAR(255)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Descrição da obrigação.</td></tr>
+    <tr><td class="codigo">chave_nfe_entrada</td><td class="tipo">CHAR(44)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. 44 dígitos, preenchida quando a conta vem de nota de entrada.</td><td>Chave de acesso da nota fiscal de entrada.</td></tr>
+    <tr><td class="codigo">numero_nfe_entrada</td><td class="tipo">INT</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Número da nota de entrada, preenchido quando a conta vem de nota de entrada.</td><td>Número da nota fiscal de entrada.</td></tr>
+    <tr><td class="codigo">serie_nfe_entrada</td><td class="tipo">VARCHAR(3)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto de até 3 caracteres, preenchido quando a conta vem de nota de entrada.</td><td>Série da nota fiscal de entrada.</td></tr>
+    <tr><td class="codigo">data_emissao</td><td class="tipo">DATE</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória.</td><td>Data de emissão do título.</td></tr>
+    <tr><td class="codigo">data_vencimento</td><td class="tipo">DATE</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. CHECK: não pode ser anterior a data_emissao.</td><td>Data de vencimento.</td></tr>
+    <tr><td class="codigo">valor_titulo</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>CHECK: maior ou igual a zero (RB16).</td><td>Valor total do título.</td></tr>
+    <tr><td class="codigo">valor_pago</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>0</td><td>CHECK: maior ou igual a zero (RB16). Zero enquanto a conta não é paga.</td><td>Valor efetivamente pago.</td></tr>
+    <tr><td class="codigo">data_hora_pagamento</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Preenchida quando a conta é paga.</td><td>Data e hora do pagamento.</td></tr>
+    <tr><td class="codigo">forma_pagamento</td><td class="tipo">VARCHAR(30)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. BOLETO ou PIX (premissa do grupo).</td><td>Forma utilizada no pagamento.</td></tr>
+    <tr><td class="codigo">status_conta_pagar</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. ABERTA, PAGA ou CANCELADA (premissa do grupo).</td><td>Situação da conta.</td></tr>
+    <tr><td class="codigo">observacao</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Informações adicionais.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="fornecedor">FORNECEDOR</h2>
+<p class="nota">Empresas que vendem produtos à organização.</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_fornecedor</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do fornecedor.</td></tr>
+    <tr><td class="codigo">razao_social</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Razão social.</td></tr>
+    <tr><td class="codigo">nome_fantasia</td><td class="tipo">VARCHAR(60)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Nome fantasia.</td></tr>
+    <tr><td class="codigo">CNPJ</td><td class="tipo">CHAR(14)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Somente dígitos (14), sem máscara.</td><td>Cadastro Nacional da Pessoa Jurídica.</td></tr>
+    <tr><td class="codigo">inscricao_estadual</td><td class="tipo">VARCHAR(20)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Aceita texto, como "ISENTO".</td><td>Inscrição estadual.</td></tr>
+    <tr><td class="codigo">telefone</td><td class="tipo">VARCHAR(15)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Somente dígitos.</td><td>Telefone de contato.</td></tr>
+    <tr><td class="codigo">email</td><td class="tipo">VARCHAR(100)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Formato de e-mail.</td><td>E-mail de contato.</td></tr>
+    <tr><td class="codigo">logradouro</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Logradouro do endereço.</td></tr>
+    <tr><td class="codigo">numero</td><td class="tipo">VARCHAR(10)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto, para aceitar "S/N".</td><td>Número do endereço.</td></tr>
+    <tr><td class="codigo">complemento</td><td class="tipo">VARCHAR(50)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Complemento do endereço.</td></tr>
+    <tr><td class="codigo">bairro</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Bairro do endereço.</td></tr>
+    <tr><td class="codigo">cidade</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Cidade do endereço.</td></tr>
+    <tr><td class="codigo">UF</td><td class="tipo">CHAR(2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Sigla de duas letras (ex.: SP).</td><td>Unidade federativa.</td></tr>
+    <tr><td class="codigo">CEP</td><td class="tipo">CHAR(8)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Somente dígitos (8), sem hífen.</td><td>Código de Endereçamento Postal.</td></tr>
+    <tr><td class="codigo">status</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. ATIVO ou INATIVO (premissa do grupo).</td><td>Situação cadastral.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="faturamento">FATURAMENTO</h2>
+<p class="nota">Agrupa as notas fiscais de saída de um ou mais pedidos. Cada faturamento tem pelo menos uma nota (RB11).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_faturamento</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador do faturamento.</td></tr>
+    <tr><td class="codigo">data_hora_faturamento</td><td class="tipo">DATETIME</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Data e hora em que o faturamento foi registrado (RB06).</td><td>Data e hora do faturamento.</td></tr>
+    <tr><td class="codigo">status_faturamento</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. EMITIDO ou CANCELADO (premissa do grupo).</td><td>Situação do faturamento.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="nota">NOTA_FISCAL</h2>
+<p class="nota">Notas fiscais de saída emitidas para os pedidos. O campo id_faturamento é opcional, porque a nota pode ser cancelada antes de ser faturada (GERA, 0,1). Somente o setor Fiscal emite e cancela notas (RB05 e RB07).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_nota_fiscal</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador da nota.</td></tr>
+    <tr><td class="codigo">id_pedido</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Deve existir em PEDIDO (EMITE).</td><td>Pedido que originou a nota (EMITE).</td></tr>
+    <tr><td class="codigo">id_faturamento</td><td class="tipo">INT (FK)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Deve existir em FATURAMENTO, quando informado (GERA, RB11 para o lado do faturamento).</td><td>Faturamento ao qual a nota pertence (GERA).</td></tr>
+    <tr><td class="codigo">serie_nfe_saida</td><td class="tipo">VARCHAR(3)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto de até 3 caracteres, para preservar zeros à esquerda (RB05).</td><td>Série da nota fiscal.</td></tr>
+    <tr><td class="codigo">numero_nfe_saida</td><td class="tipo">INT</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. CHECK: maior que zero (RB05).</td><td>Número da nota fiscal.</td></tr>
+    <tr><td class="codigo">chave_nfe_saida</td><td class="tipo">CHAR(44)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatória e única. 44 dígitos, conforme a chave de acesso da NF-e (RB05).</td><td>Chave de acesso da NF-e.</td></tr>
+    <tr><td class="codigo">motivo_cancelamento_nfe</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Preenchido apenas quando a nota é cancelada pelo setor Fiscal (RB07). Texto livre.</td><td>Motivo do cancelamento.</td></tr>
+    <tr><td class="codigo">data_hora_cancelamento_nfe</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Preenchido apenas quando a nota é cancelada (RB07).</td><td>Data e hora do cancelamento.</td></tr>
+    <tr><td class="codigo">status_nfe_saida</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. AUTORIZADA ou CANCELADA (premissa do grupo).</td><td>Situação da nota.</td></tr>
+    <tr><td class="codigo">data_hora_emissao</td><td class="tipo">DATETIME</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Data e hora da emissão pelo setor Fiscal (RB05).</td><td>Data e hora da emissão.</td></tr>
+    <tr><td class="codigo">protocolo_autorizacao</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Protocolo fornecido pela SEFAZ na autorização da nota (RB05).</td><td>Protocolo de autorização da nota.</td></tr>
+    <tr><td class="codigo">valor_total_nfe_saida</td><td class="tipo">DECIMAL(10,2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. CHECK: maior ou igual a zero (RB16). Valor fiscal emitido, mantido como registro fiscal.</td><td>Valor fiscal total emitido.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="expedicao">EXPEDICAO</h2>
+<p class="nota">Preparação e envio de cada nota fiscal. Cada expedição tem exatamente uma nota, e cada nota tem no máximo uma expedição (DESPACHA, RB12). O campo id_nota_fiscal é obrigatório e único.</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_expedicao</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador da expedição.</td></tr>
+    <tr><td class="codigo">id_nota_fiscal</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Deve existir em NOTA_FISCAL. Cada nota tem no máximo uma expedição (RB12).</td><td>Nota fiscal despachada.</td></tr>
+    <tr><td class="codigo">id_transportadora</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Deve existir em TRANSPORTADORA (TRANSPORTA).</td><td>Transportadora que recebe a expedição (TRANSPORTA).</td></tr>
+    <tr><td class="codigo">data_hora_liberacao</td><td class="tipo">DATETIME</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Data e hora em que a expedição foi liberada para separação.</td><td>Data e hora da liberação da expedição.</td></tr>
+    <tr><td class="codigo">data_hora_inicio</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Preenchida quando a separação começa.</td><td>Data e hora do início da expedição.</td></tr>
+    <tr><td class="codigo">data_hora_fim</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. CHECK: não pode ser anterior a data_hora_inicio.</td><td>Data e hora do fim da expedição.</td></tr>
+    <tr><td class="codigo">status_expedicao</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. SEPARANDO ou DESPACHADA (premissa do grupo).</td><td>Situação da expedição.</td></tr>
+    <tr><td class="codigo">observacao</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Informações adicionais.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="transportadora">TRANSPORTADORA</h2>
+<p class="nota">Empresas responsáveis pelo transporte e pela entrega. Cada transportadora pode ter várias entregas (REALIZA, RB14) e várias expedições (TRANSPORTA).</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_transportadora</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador da transportadora.</td></tr>
+    <tr><td class="codigo">telefone</td><td class="tipo">VARCHAR(15)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Somente dígitos.</td><td>Telefone de contato.</td></tr>
+    <tr><td class="codigo">CNPJ</td><td class="tipo">CHAR(14)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Somente dígitos (14), sem máscara.</td><td>Cadastro Nacional da Pessoa Jurídica.</td></tr>
+    <tr><td class="codigo">razao_social</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Razão social.</td></tr>
+    <tr><td class="codigo">email</td><td class="tipo">VARCHAR(100)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Formato de e-mail.</td><td>E-mail de contato.</td></tr>
+    <tr><td class="codigo">rntrc</td><td class="tipo">VARCHAR(8)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Código do RNTRC (ANTT), como texto de até 8 caracteres, para preservar zeros à esquerda.</td><td>Registro Nacional de Transportadores Rodoviários de Cargas.</td></tr>
+    <tr><td class="codigo">modal</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. RODOVIARIO (premissa do grupo).</td><td>Modal de transporte.</td></tr>
+    <tr><td class="codigo">nome_fantasia</td><td class="tipo">VARCHAR(60)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Nome fantasia.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="entrega">ENTREGA</h2>
+<p class="nota">Entrega realizada pela transportadora. Liga-se à transportadora (REALIZA, RB14). O endereço é o de entrega, que pode diferir do endereço do cliente.</p>
+<table>
+  <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Único</th><th>Padrão</th><th>Valores permitidos / regra</th><th>Significado</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">id_entrega</td><td class="tipo">INT (PK, AI)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Gerado automaticamente.</td><td>Identificador da entrega.</td></tr>
+    <tr><td class="codigo">id_transportadora</td><td class="tipo">INT (FK)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Deve existir em TRANSPORTADORA (RB14).</td><td>Transportadora responsável.</td></tr>
+    <tr><td class="codigo">codigo_rastreio</td><td class="tipo">VARCHAR(40)</td><td class="sim">Sim</td><td class="sim">Sim</td><td>—</td><td>Obrigatório e único. Código fornecido pela transportadora.</td><td>Código de rastreio fornecido pela transportadora.</td></tr>
+    <tr><td class="codigo">motivo_ocorrencia</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Preenchido apenas quando há ocorrência (status OCORRENCIA). Texto livre.</td><td>Motivo da ocorrência.</td></tr>
+    <tr><td class="codigo">data_hora_saida</td><td class="tipo">DATETIME</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Data e hora em que a entrega saiu para o destinatário.</td><td>Data e hora de saída para entrega.</td></tr>
+    <tr><td class="codigo">data_prevista_entrega</td><td class="tipo">DATE</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Data prevista informada pela transportadora.</td><td>Data prevista para entrega.</td></tr>
+    <tr><td class="codigo">comprovante_entrega</td><td class="tipo">VARCHAR(255)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Caminho ou link do comprovante de recebimento.</td><td>Referência ao comprovante de recebimento.</td></tr>
+    <tr><td class="codigo">status_entrega</td><td class="tipo">VARCHAR(20)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. EM_TRANSITO, ENTREGUE ou OCORRENCIA (premissa do grupo).</td><td>Situação da entrega.</td></tr>
+    <tr><td class="codigo">data_hora_ultima_ocorrencia</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Preenchida quando há ocorrência.</td><td>Data e hora da ocorrência mais recente.</td></tr>
+    <tr><td class="codigo">logradouro</td><td class="tipo">VARCHAR(100)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre. Endereço de entrega, que pode diferir do endereço do cliente.</td><td>Logradouro do endereço de entrega.</td></tr>
+    <tr><td class="codigo">numero</td><td class="tipo">VARCHAR(10)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto, para aceitar "S/N".</td><td>Número do endereço de entrega.</td></tr>
+    <tr><td class="codigo">complemento</td><td class="tipo">VARCHAR(50)</td><td>Não</td><td>Não</td><td>—</td><td>Opcional. Texto livre.</td><td>Complemento do endereço de entrega.</td></tr>
+    <tr><td class="codigo">bairro</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Texto livre.</td><td>Bairro do endereço de entrega.</td></tr>
+    <tr><td class="codigo">cidade</td><td class="tipo">VARCHAR(50)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Texto livre.</td><td>Cidade do endereço de entrega.</td></tr>
+    <tr><td class="codigo">UF</td><td class="tipo">CHAR(2)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatória. Sigla de duas letras (ex.: SP).</td><td>Unidade federativa do endereço de entrega.</td></tr>
+    <tr><td class="codigo">CEP</td><td class="tipo">CHAR(8)</td><td class="sim">Sim</td><td>Não</td><td>—</td><td>Obrigatório. Somente dígitos (8), sem hífen.</td><td>CEP do endereço de entrega.</td></tr>
+    <tr><td class="codigo">data_hora_entrega</td><td class="tipo">DATETIME</td><td>Não</td><td>Não</td><td>—</td><td>CHECK: não pode ser anterior a data_hora_saida. Preenchida apenas quando a entrega é realizada.</td><td>Data e hora em que a entrega foi realizada.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<section id="regras">
+<h2>Regras de negócio e cardinalidade</h2>
+<p class="nota">Os mínimos e máximos abaixo são os do DER conceitual. O diagrama lógico gerado pela ferramenta só representa (0,n) e (1,1). Os mínimos que o banco não impõe são verificados pelas consultas A01 a A04 do script. "Aplicação" significa que a regra é controlada pelo sistema, e não pelo banco.</p>
+<table>
+  <thead><tr><th>Código</th><th>Relação ou tema</th><th>Cardinalidade (DER)</th><th>Garantia</th><th>Regra de negócio</th><th>Verificação</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">RB01</td><td colspan="2">Consulta entre setores</td><td>Aplicação</td><td>Funcionários podem consultar informações de outros setores.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB02</td><td colspan="2">Registro e liberação de pedidos</td><td>Aplicação</td><td>Somente o setor Comercial/Vendas registra e libera pedidos.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB03</td><td colspan="2">Acesso da transportadora</td><td>Aplicação</td><td>A transportadora registra e atualiza somente as informações de transporte e entrega dos pedidos sob sua responsabilidade.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB04</td><td colspan="2">Isolamento entre transportadoras</td><td>Aplicação</td><td>Cada transportadora consulta e atualiza somente as entregas vinculadas a ela.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB05</td><td colspan="2">Registro fiscal</td><td>Aplicação e banco (NOT NULL, UNIQUE)</td><td>Somente o setor Fiscal registra e emite as notas fiscais. A chave da NF-e é única.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB06</td><td colspan="2">Registro financeiro</td><td>Aplicação</td><td>O setor Faturamento/Financeiro registra os valores faturados, os valores dos pedidos e as condições de pagamento.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB07</td><td colspan="2">Cancelamento</td><td>Aplicação</td><td>Somente o setor Fiscal cancela notas fiscais. Pedidos cancelados ficam no histórico, com motivo e data.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB08</td><td>CONTEM (PEDIDO–PRODUTO)</td><td>Pedido (1,n) produtos</td><td>Aplicação</td><td>Todo pedido tem ao menos um produto.</td><td>A01</td></tr>
+    <tr><td class="codigo">RB09</td><td>ORIGINA (PRODUTO–CONTAS_PAGAR)</td><td>Produto (1,n) contas</td><td>Aplicação</td><td>Todo produto tem ao menos uma compra registrada.</td><td>A03</td></tr>
+    <tr><td class="codigo">RB10</td><td>ORIGINA (CONTAS_PAGAR–PRODUTO)</td><td>Conta (1,n) produtos</td><td>Aplicação</td><td>Toda conta a pagar tem ao menos um produto.</td><td>A02</td></tr>
+    <tr><td class="codigo">RB11</td><td>GERA (FATURAMENTO–NOTA_FISCAL)</td><td>Faturamento (1,n) notas</td><td>Aplicação</td><td>Todo faturamento tem ao menos uma nota fiscal.</td><td>A04</td></tr>
+    <tr><td class="codigo">RB12</td><td>DESPACHA (NOTA_FISCAL–EXPEDICAO)</td><td>Expedição (1,1) nota; nota (0,1) expedição</td><td>Banco (NOT NULL e UNIQUE)</td><td>Cada expedição tem exatamente uma nota; cada nota tem no máximo uma expedição.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">—</td><td>ATENDE (PEDIDO–REPRESENTANTE)</td><td>Pedido (0,1) representante</td><td>Banco (FK opcional)</td><td>Pedido pode não ter representante. Sem código RB próprio.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">—</td><td>GERA (NOTA_FISCAL–FATURAMENTO)</td><td>Nota (0,1) faturamento</td><td>Banco (FK opcional)</td><td>Nota pode ser cancelada antes de faturada. Sem código RB próprio.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB13</td><td>PAGA (FORNECEDOR–CONTAS_PAGAR)</td><td>Conta (1,1) fornecedor</td><td>Banco (NOT NULL)</td><td>Toda conta a pagar tem um fornecedor.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB14</td><td>REALIZA (TRANSPORTADORA–ENTREGA)</td><td>Entrega (1,1) transportadora</td><td>Banco (NOT NULL)</td><td>Toda entrega tem uma transportadora.</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB15</td><td colspan="2">Dados pessoais de representantes, clientes e contatos</td><td>Aplicação</td><td>Usados apenas para cadastro e atendimento, com acesso restrito (LGPD).</td><td>Não se aplica</td></tr>
+    <tr><td class="codigo">RB16</td><td colspan="2">Quantidades, preços e valores</td><td>Banco (CHECK)</td><td>Não podem ser negativos; quantidades devem ser maiores que zero.</td><td>Não se aplica</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section id="premissas">
+<h2>Premissas do grupo</h2>
+<div class="alerta">
+  Os valores abaixo <strong>não foram informados pela organização</strong>. Foram definidos pelo grupo, para que o modelo tenha valores coerentes. Devem ser validados com a organização antes da entrega final, se possível.
+</div>
+<table>
+  <thead><tr><th>Campo</th><th>Valores definidos pelo grupo</th></tr></thead>
+  <tbody>
+    <tr><td class="codigo">CLIENTE.status, FORNECEDOR.status</td><td>ATIVO, INATIVO</td></tr>
+    <tr><td class="codigo">REPRESENTANTE_COMERCIAL.status_representante</td><td>ATIVO, INATIVO</td></tr>
+    <tr><td class="codigo">PRODUTO.status_produto</td><td>ATIVO, INATIVO</td></tr>
+    <tr><td class="codigo">PRODUTO.categoria</td><td>MODA_FEMININA, UTENSILIOS, CASA</td></tr>
+    <tr><td class="codigo">PRODUTO.unidade_medida</td><td>UN, CX, KG</td></tr>
+    <tr><td class="codigo">PEDIDO.tipo_pedido</td><td>VENDA, TROCA, BONIFICACAO</td></tr>
+    <tr><td class="codigo">PEDIDO.status_pedido</td><td>LIBERADO, EXPEDIDO, ENTREGUE, CANCELADO</td></tr>
+    <tr><td class="codigo">PEDIDO.condicao_pagamento</td><td>A_VISTA, A_PRAZO</td></tr>
+    <tr><td class="codigo">FATURAMENTO.status_faturamento</td><td>EMITIDO, CANCELADO</td></tr>
+    <tr><td class="codigo">NOTA_FISCAL.status_nfe_saida</td><td>AUTORIZADA, CANCELADA</td></tr>
+    <tr><td class="codigo">EXPEDICAO.status_expedicao</td><td>SEPARANDO, DESPACHADA</td></tr>
+    <tr><td class="codigo">ENTREGA.status_entrega</td><td>EM_TRANSITO, ENTREGUE, OCORRENCIA</td></tr>
+    <tr><td class="codigo">CONTAS_PAGAR.status_conta_pagar</td><td>ABERTA, PAGA, CANCELADA</td></tr>
+    <tr><td class="codigo">CONTAS_PAGAR.forma_pagamento</td><td>BOLETO, PIX</td></tr>
+    <tr><td class="codigo">TRANSPORTADORA.modal</td><td>RODOVIARIO</td></tr>
+  </tbody>
+</table>
+<p class="nota">Quantidades usadas na massa de dados (não são regras do banco): 5 transportadoras; 15 fornecedores; 50 contas a pagar, cada uma reunindo 10 produtos; 900 pedidos no período, com 1 a 4 itens; 1 nota e 1 faturamento por pedido; 1 em cada 25 pedidos cancelado; 1 em cada 5 pedidos sem representante.</p>
+</section>
+
+</main>
+</body>
+</html>
