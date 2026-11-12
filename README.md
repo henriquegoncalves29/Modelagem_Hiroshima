@@ -292,9 +292,9 @@ Regra adotada: um KPI só entra na lista se as tabelas do modelo tiverem os dado
 
 | Problema ou KPI | Tabelas envolvidas | Consulta no script | O que a consulta mostra |
 | :---- | :---- | :---- | :---- |
-| P1 — informações divididas entre setores | PEDIDO, CLIENTE, NOTA_FISCAL, FATURAMENTO, EXPEDICAO | G01 | Visão única do pedido, com cliente, nota, faturamento e expedição em uma linha. |
-| P2 — perda de dados entre etapas | PEDIDO, NOTA_FISCAL, EXPEDICAO | G02 | Pedidos expedidos ou entregues sem nota fiscal ou sem expedição. Na massa de dados, retorna zero linhas. |
-| P3 — falta de visão integrada do ciclo | PEDIDO, NOTA_FISCAL, FATURAMENTO, EXPEDICAO | G03 | Quantidade de pedidos em cada status, por mês. |
+| PN1 — informações divididas entre setores | PEDIDO, CLIENTE, NOTA_FISCAL, FATURAMENTO, EXPEDICAO | G01 | Visão única do pedido, com cliente, nota, faturamento e expedição em uma linha. |
+| PN2 — perda de dados entre etapas | PEDIDO, NOTA_FISCAL, EXPEDICAO | G02 | Pedidos expedidos ou entregues sem nota fiscal ou sem expedição. Na massa de dados, retorna zero linhas. |
+| PN3 — falta de visão integrada do ciclo | PEDIDO, NOTA_FISCAL, FATURAMENTO, EXPEDICAO | G03 | Quantidade de pedidos em cada status, por mês. |
 | K01 — ticket médio | NOTA_FISCAL | G04 | Valor médio das notas autorizadas, por mês. |
 | K02 — taxa de cancelamento | PEDIDO | G05 | Pedidos cancelados sobre o total, por mês. |
 | K03 — tempo até a expedição | PEDIDO, NOTA_FISCAL, EXPEDICAO | G06 | Horas entre a liberação e o início da expedição, por mês. |
