@@ -486,3 +486,7 @@ Uso relatado pelos próprios integrantes, em conversas separadas das deste proje
 
 Parte do script SQL, a massa de dados fictícia e alguns textos de documentação foram produzidos com apoio do Claude (Claude Code). Os prompts estão no histórico da conversa. A massa de dados foi gerada por script, e os valores de domínio são premissas do grupo. O script SQL foi testado no MySQL antes da entrega, e os textos foram revisados pelo grupo.
 
+
+**Apresentação Gravada Final**
+Segue o link da gravação: https://youtu.be/vtIPjVqRZ2I
+
