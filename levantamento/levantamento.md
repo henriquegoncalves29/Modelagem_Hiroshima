@@ -29,9 +29,9 @@ Durante a entrevista, foram abordados o funcionamento da empresa, o registro e o
 **Setores envolvidos:** Comercial/Vendas, Cadastro de Produtos/Catálogo, Fiscal, Faturamento/Financeiro, Expedição/Logística e Transporte/Entregas.
 
 **Problemas confirmados pela entrevistada:**
-- **P1:** informações divididas entre os setores, dificultando o acompanhamento dos pedidos.
-- **P2:** perda de informações entre as etapas do ciclo do pedido.
-- **P3:** ausência de uma visão integrada do processo, desde o registro do pedido até a expedição.
+- **PN1:** informações divididas entre os setores, dificultando o acompanhamento dos pedidos.
+- **PN2:** perda de informações entre as etapas do ciclo do pedido.
+- **PN3:** ausência de uma visão integrada do processo, desde o registro do pedido até a expedição.
 
 **Outros temas tratados:** processo de compras, relacionamento com fornecedores, contas a pagar e origem dos produtos adquiridos. Esses temas ampliam a cobertura do modelo em relação à primeira entrega.
 
